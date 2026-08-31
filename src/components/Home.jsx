@@ -359,11 +359,6 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
       {/* Hero Section */}
       <section id="hero" style={styles.heroSection} className="hero-section-responsive">
         <div style={styles.heroOverlay}></div>
-        {/* Instant zero-delay background layer */}
-        <div 
-          style={{ ...styles.heroBgImage, backgroundImage: `url("${heroMedia.poster || '/grilled_mackerel.jpg'}")` }}
-          className="hero-bg-video-responsive"
-        ></div>
         {heroMedia.type === 'video' ? (
           <video
             key={activeMediaUrl}
@@ -372,8 +367,6 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
             loop={heroMedia.loop ?? true}
             muted={heroMedia.muted ?? true}
             playsInline
-            preload="auto"
-            poster={heroMedia.poster || '/grilled_mackerel.jpg'}
             onLoadedMetadata={(e) => {
               const start = Number(heroMedia.startTime ?? 4.5);
               if (start > 0) {
