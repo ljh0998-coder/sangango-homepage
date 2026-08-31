@@ -152,7 +152,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
               {isLogin ? '로그인에 성공했습니다!' : '회원가입이 완료되었습니다!'}
             </h3>
             <p style={styles.successText}>산으로간고등어에 오신 것을 환영합니다.</p>
-            <p style={styles.subtext}>⚡ Supabase 클라우드 데이터베이스 연동 완료</p>
+            <p style={styles.subtext}>회원 전용 스탬프 적립 및 다양한 혜택을 이용하실 수 있습니다.</p>
           </div>
         ) : (
           <div className="animate-fade">
