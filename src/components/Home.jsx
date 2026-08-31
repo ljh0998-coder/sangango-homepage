@@ -386,12 +386,16 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
               e.target.play().catch(() => {});
             }}
             style={styles.heroBgVideo}
+            className="hero-bg-video-responsive"
           />
         ) : (
-          <div style={{ ...styles.heroBgImage, backgroundImage: `url("${activeMediaUrl || '/grilled_mackerel.jpg'}")` }}></div>
+          <div 
+            style={{ ...styles.heroBgImage, backgroundImage: `url("${activeMediaUrl || '/grilled_mackerel.jpg'}")` }}
+            className="hero-bg-video-responsive"
+          ></div>
         )}
         <div style={styles.heroContent} className="container animate-fade">
-          <div style={styles.heroTagline}>
+          <div style={styles.heroTagline} className="hero-tagline-responsive">
             <Flame size={16} color="#D84315" />
             <span>{heroMedia.tagline || '화덕 생선구이의 대명사'}</span>
           </div>
