@@ -176,6 +176,15 @@
   - [Home.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Home.jsx) & [Admin.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Admin.jsx): `startTime: 0` 설정으로 브라우저 시킹 지연 없이 첫 프레임부터 0초 즉시 재생.
 - **효과**: PC 와이드 화면에서 선명한 1080P 고화질을 완벽 보장하고, 모바일에서도 20MB대의 가벼운 용량으로 버퍼링 없는 즉각적인 재생 구현.
 
+### 25) 소비자(사용자) UX 및 기능/보안 종합 코드 최적화 (`LoginModal.jsx`, `Signup.jsx`, `Home.jsx`)
+- **기능 요구사항**:
+  - 소비자 이용 관점에서 개발자 디버깅 문구를 정제하고, 백엔드 원시 에러 노출 방지 및 사용자 친화적 한글 안내 체계 구축.
+- **구현 방식**:
+  - [LoginModal.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/LoginModal.jsx): 로그인 성공 화면의 개발자용 텍스트를 고객 친화적인 브랜드 환영 및 회원 혜택 안내 카피로 정제.
+  - [Signup.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Signup.jsx): raw `error.message` 직출력을 전면 차단하고, 상황별 맞춤 한글 오류 안내(비밀번호 규격, 기가입 계정 등)로 보안성 및 UX 개선.
+  - [Home.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Home.jsx): 외부 지도/인스타그램/전화 걸기 인터랙션의 접근성 및 모바일 터치 최적화 유지.
+- **효과**: 고객 신뢰도 상승, 보안 오류 메시지 은닉, 모바일/PC 전반의 매끄러운 사용자 경험 제공.
+
 ---
 
 ## 2. 종합 검증 결과
@@ -186,15 +195,5 @@
 4. **검색엔진 SEO 제어**: 검색엔진 소유확인 완료 및 개발 중 노출 차단(`noindex`, `Disallow: /`) 적용
 5. **성능 & 메모리 최적화**: `React.memo`, `useCallback`, IndexedDB Blob 메모리 자동 해제 적용
 6. **대문 미디어 모바일 최적화**: 1080P FHD VBR 고화질 영상 교체, 0초 즉시 재생, 화각 35%+ 확장 적용
-7. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
-
-
-
-
-
-
-
-
-
-
+7. **보안성 & UX 검증**: `.env` 노출 차단, 백엔드 에러 은닉, 고객 중심 문구 정제 완료
 

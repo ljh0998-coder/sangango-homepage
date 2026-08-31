@@ -150,10 +150,12 @@ export default function Signup({ onOpenLogin, onSignupSuccess, onNavigateHome })
       });
 
       if (error) {
-        if (error.message.includes('User already registered')) {
+        if (error.message?.includes('User already registered') || error.message?.includes('already been registered')) {
           setServerError('이미 가입된 이메일 주소입니다. 로그인을 이용해주세요.');
+        } else if (error.message?.includes('Password')) {
+          setServerError('비밀번호 형식을 다시 확인해주세요. (최소 8자, 특수문자 포함)');
         } else {
-          setServerError(error.message || '회원가입 처리 중 오류가 발생했습니다.');
+          setServerError('회원가입 처리 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }
         setIsLoading(false);
         return;
