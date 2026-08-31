@@ -19,7 +19,7 @@ const DEFAULT_HERO_MEDIA = {
   autoPlay: true,
   loop: true,
   muted: true,
-  startTime: 4.5
+  startTime: 0
 };
 
 const DEFAULT_ADMIN_USER = {
