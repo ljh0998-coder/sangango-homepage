@@ -1,0 +1,8 @@
+# robots.txt for Naver Yeti & Search Engines
+User-agent: *
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+Sitemap: https://sangango-homepage.vercel.app/sitemap.xml
