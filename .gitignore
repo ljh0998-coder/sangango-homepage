@@ -27,4 +27,9 @@ dist-ssr
 mingit/
 gh_tool/
 
+# Environment & Secret files
+.env
+.env*.local
+mcp_config.json
 
+.vercel

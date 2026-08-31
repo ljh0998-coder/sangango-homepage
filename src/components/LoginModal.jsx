@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, X, CheckCircle, Smartphone } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,16 +11,22 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [agree, setAgree] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     // Validation
     if (!email || !password) {
       setError('이메일과 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('비밀번호는 최소 6자 이상이어야 합니다.');
       return;
     }
 
@@ -33,18 +40,93 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
       return;
     }
 
-    setSuccess(true);
-    setTimeout(() => {
-      onLoginSuccess(isLogin ? { email, name: email.split('@')[0] } : { email, name });
-      setSuccess(false);
-      onClose();
-      // Reset fields
-      setEmail('');
-      setPassword('');
-      setName('');
-      setPhone('');
-      setAgree(false);
-    }, 1500);
+    setIsLoading(true);
+
+    try {
+      if (isLogin) {
+        // Supabase SignIn
+        const { data, error: authError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (authError) {
+          if (authError.message?.includes('Invalid login credentials')) {
+            setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+          } else if (authError.message?.includes('Email not confirmed')) {
+            setError('이메일 인증이 완료되지 않았습니다.');
+          } else {
+            setError('로그인 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          }
+          setIsLoading(false);
+          return;
+        }
+
+        const user = data.user;
+        const displayName = user?.user_metadata?.name || email.split('@')[0];
+        setSuccess(true);
+        setIsLoading(false);
+
+        setTimeout(() => {
+          onLoginSuccess({
+            id: user?.id,
+            email: user?.email,
+            name: displayName,
+            phone: user?.user_metadata?.phone || ''
+          });
+          setSuccess(false);
+          onClose();
+          setEmail('');
+          setPassword('');
+        }, 1200);
+      } else {
+        // Supabase SignUp
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              name,
+              phone
+            }
+          }
+        });
+
+        if (signUpError) {
+          if (signUpError.message?.includes('User already registered')) {
+            setError('이미 가입된 이메일 주소입니다.');
+          } else {
+            setError('회원가입 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          }
+          setIsLoading(false);
+          return;
+        }
+
+        const user = data.user;
+        setSuccess(true);
+        setIsLoading(false);
+
+        setTimeout(() => {
+          onLoginSuccess({
+            id: user?.id,
+            email: user?.email,
+            name: name || email.split('@')[0],
+            phone: phone
+          });
+          setSuccess(false);
+          onClose();
+          setEmail('');
+          setPassword('');
+          setName('');
+          setPhone('');
+          setAgree(false);
+        }, 1200);
+      }
+    } catch (err) {
+      console.error('Supabase auth error:', err);
+      setError('서버 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -61,7 +143,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
               {isLogin ? '로그인에 성공했습니다!' : '회원가입이 완료되었습니다!'}
             </h3>
             <p style={styles.successText}>산으로간고등어에 오신 것을 환영합니다.</p>
-            <p style={styles.subtext}>수파베이스 연결 대기 중 (시뮬레이션 모드)</p>
+            <p style={styles.subtext}>⚡ Supabase 클라우드 데이터베이스 연동 완료</p>
           </div>
         ) : (
           <div className="animate-fade">
@@ -138,8 +220,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                 </label>
               )}
 
-              <button type="submit" style={styles.submitBtn}>
-                {isLogin ? '로그인하기' : '회원가입 완료'}
+              <button type="submit" style={styles.submitBtn} disabled={isLoading}>
+                {isLoading ? '처리 중...' : (isLogin ? '로그인하기' : '회원가입 완료')}
               </button>
             </form>
 
@@ -150,8 +232,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
               <button
                 type="button"
                 onClick={() => {
-                  setIsLogin(!isLogin);
-                  setError('');
+                  if (isLogin) {
+                    onClose();
+                    window.location.hash = '#/signup';
+                  } else {
+                    setIsLogin(true);
+                    setError('');
+                  }
                 }}
                 style={styles.switchBtn}
               >
@@ -160,7 +247,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
             </div>
 
             <div style={styles.supaBadge}>
-              <span>⚙️ Supabase Integration Placeholder</span>
+              <span>⚡ Supabase Database & Auth 연동 활성화</span>
             </div>
           </div>
         )}
