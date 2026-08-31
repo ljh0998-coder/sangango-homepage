@@ -19,7 +19,7 @@ const DEFAULT_HERO_MEDIA = {
   autoPlay: true,
   loop: true,
   muted: true,
-  startTime: 0
+  startTime: 4.5
 };
 
 const DEFAULT_ADMIN_USER = {
@@ -1245,7 +1245,7 @@ export default function Admin() {
                   {/* Preset Offset Quick Buttons */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <span style={{ fontSize: '12px', fontWeight: '600', color: '#8C7E7A' }}>빠른 선택:</span>
-                    {[0, 1, 2, 3, 5, 10, 15].map((sec) => (
+                    {[0, 1, 2, 3, 4.5, 5, 10, 15].map((sec) => (
                       <button
                         key={sec}
                         type="button"
