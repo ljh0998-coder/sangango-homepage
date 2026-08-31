@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Mail, Lock, User, X, CheckCircle, Smartphone } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Mail, Lock, User, Smartphone, X, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
@@ -12,10 +12,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const timerRef = useRef(null);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setError('');
 
@@ -67,7 +72,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         setSuccess(true);
         setIsLoading(false);
 
-        setTimeout(() => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
           onLoginSuccess({
             id: user?.id,
             email: user?.email,
@@ -106,7 +112,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         setSuccess(true);
         setIsLoading(false);
 
-        setTimeout(() => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
           onLoginSuccess({
             id: user?.id,
             email: user?.email,
@@ -127,7 +134,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
       setError('서버 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       setIsLoading(false);
     }
-  };
+  }, [email, password, isLogin, name, phone, agree, onLoginSuccess, onClose]);
+
+  if (!isOpen) return null;
 
   return (
     <div style={styles.overlay}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import Home from './components/Home';
 import { supabase } from './lib/supabase';
 import './App.css';
@@ -60,7 +60,7 @@ function App() {
   }, []);
 
   // Helper to extract clean user info from Supabase user session
-  const formatUserObject = (user) => {
+  const formatUserObject = useCallback((user) => {
     if (!user) return null;
     return {
       id: user.id,
@@ -68,7 +68,7 @@ function App() {
       name: user.user_metadata?.name || user.email?.split('@')[0],
       phone: user.user_metadata?.phone || '',
     };
-  };
+  }, []);
 
   // Supabase Auth state listener
   useEffect(() => {
@@ -79,22 +79,22 @@ function App() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [formatUserObject]);
 
-  const handleLoginSuccess = (user) => {
+  const handleLoginSuccess = useCallback((user) => {
     setLoggedInUser(user);
     setIsLoginOpen(false);
     setIsSignupOpen(false);
-  };
+  }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await supabase.auth.signOut();
     } catch (e) {
       console.error('Logout error:', e);
     }
     setLoggedInUser(null);
-  };
+  }, []);
 
   // Router Switcher for /admin and /signup (supporting both pathname and hash)
   const renderPage = () => {

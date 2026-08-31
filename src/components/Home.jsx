@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { Flame, MapPin, Phone, Clock, ChevronRight, User, LogOut, Check, Menu, X, ShoppingBag, Store, Package } from 'lucide-react';
 import { getMediaFile } from '../lib/mediaStorage';
 
-const NaverIcon = ({ size = 15, color = '#FFFFFF' }) => (
+const NaverIcon = memo(({ size = 15, color = '#FFFFFF' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={color} style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}>
     <path d="M16.273 12.845L7.376 0H0v24h7.727v-12.845L16.624 24H24V0h-7.727v12.845z" />
   </svg>
-);
+));
 
-const InstagramIcon = ({ size = 16, color = '#E1306C' }) => (
+const InstagramIcon = memo(({ size = 16, color = '#E1306C' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}>
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
   </svg>
-);
+));
 
 const menuItems = [
   {
@@ -213,15 +213,22 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
     let activeBlobUrl = null;
 
     const updateMediaUrl = async (mediaConfig) => {
-      if (mediaConfig.isIndexedDB) {
+      if (mediaConfig?.isIndexedDB) {
         const blob = await getMediaFile('hero_media_blob');
         if (blob) {
+          if (activeBlobUrl) {
+            URL.revokeObjectURL(activeBlobUrl);
+          }
           activeBlobUrl = URL.createObjectURL(blob);
           setActiveMediaUrl(activeBlobUrl);
           return;
         }
       }
-      setActiveMediaUrl(mediaConfig.url || '/grilled_mackerel.jpg');
+      if (activeBlobUrl) {
+        URL.revokeObjectURL(activeBlobUrl);
+        activeBlobUrl = null;
+      }
+      setActiveMediaUrl(mediaConfig?.url || '/grilled_mackerel.jpg');
     };
 
     updateMediaUrl(heroMedia);
@@ -247,13 +254,13 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
     };
   }, [heroMedia]);
 
-  const scrollToSection = (id) => {
+  const scrollToSection = useCallback((id) => {
     setIsMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
   return (
     <div style={styles.container}>
