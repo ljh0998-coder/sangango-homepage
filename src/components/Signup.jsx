@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { 
   Mail, Lock, User, Smartphone, Eye, EyeOff, 
   Check, CheckCircle2, AlertCircle, ArrowLeft, ShieldCheck, 
@@ -34,7 +34,7 @@ export default function Signup({ onOpenLogin, onSignupSuccess, onNavigateHome })
   const [isSuccess, setIsSuccess] = useState(false);
 
   // 1. Phone number auto-formatter (numbers only + hyphens)
-  const handlePhoneChange = (e) => {
+  const handlePhoneChange = useCallback((e) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, '');
     let formatted = rawValue;
 
@@ -48,7 +48,7 @@ export default function Signup({ onOpenLogin, onSignupSuccess, onNavigateHome })
       formatted = `${rawValue.slice(0, 3)}-${rawValue.slice(3, 7)}-${rawValue.slice(7, 11)}`;
     }
     setPhone(formatted);
-  };
+  }, []);
 
   // 2. Real-time Validations
   const isEmailValid = useMemo(() => {
@@ -84,21 +84,21 @@ export default function Signup({ onOpenLogin, onSignupSuccess, onNavigateHome })
   const isMarketingAll = agreeMarketingSMS && agreeMarketingEmail && agreeMarketingKakao;
   const isAllAgreed = agreeTerms && agreePrivacy && isMarketingAll;
 
-  const handleToggleAllAgreements = () => {
+  const handleToggleAllAgreements = useCallback(() => {
     const nextState = !isAllAgreed;
     setAgreeTerms(nextState);
     setAgreePrivacy(nextState);
     setAgreeMarketingSMS(nextState);
     setAgreeMarketingEmail(nextState);
     setAgreeMarketingKakao(nextState);
-  };
+  }, [isAllAgreed]);
 
-  const handleToggleMarketingAll = () => {
+  const handleToggleMarketingAll = useCallback(() => {
     const nextState = !isMarketingAll;
     setAgreeMarketingSMS(nextState);
     setAgreeMarketingEmail(nextState);
     setAgreeMarketingKakao(nextState);
-  };
+  }, [isMarketingAll]);
 
   // Form Submission Readiness
   const isFormValid = useMemo(() => {
@@ -122,7 +122,7 @@ export default function Signup({ onOpenLogin, onSignupSuccess, onNavigateHome })
   ]);
 
   // Form Submit Handler (Supabase Integration)
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     if (!isFormValid || isLoading) return;
 
@@ -175,7 +175,7 @@ export default function Signup({ onOpenLogin, onSignupSuccess, onNavigateHome })
       setServerError('네트워크 연결 상태를 확인 후 다시 시도해주세요.');
       setIsLoading(false);
     }
-  };
+  }, [isFormValid, isLoading, agreeMarketingSMS, agreeMarketingEmail, agreeMarketingKakao, email, password, name, phone, onSignupSuccess]);
 
   return (
     <div style={styles.pageWrapper}>

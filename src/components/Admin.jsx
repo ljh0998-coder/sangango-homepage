@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { 
   Users, BarChart2, TrendingUp, DollarSign, UserCheck, 
   Search, ShieldAlert, Award, FileSpreadsheet, Home as HomeIcon,
@@ -42,6 +42,8 @@ export default function Admin() {
   // Homepage Hero Media (Photo / Video) State
   const pendingFileRef = useRef(null);
   const previewVideoRef = useRef(null);
+  const toastTimerRef = useRef(null);
+  const noticeTimerRef = useRef(null);
   const [videoDuration, setVideoDuration] = useState(0);
 
   const [heroMedia, setHeroMedia] = useState(() => {
@@ -56,7 +58,15 @@ export default function Admin() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSaveToast, setShowSaveToast] = useState(false);
 
-  const handleSaveHeroMedia = async () => {
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
+    };
+  }, []);
+
+  const handleSaveHeroMedia = useCallback(async () => {
     setIsSaving(true);
     try {
       if (pendingFileRef.current) {
@@ -72,15 +82,17 @@ export default function Admin() {
       
       setSaveNotice(true);
       setShowSaveToast(true);
-      setTimeout(() => setShowSaveToast(false), 4000);
-      setTimeout(() => setSaveNotice(false), 6000);
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
+      toastTimerRef.current = setTimeout(() => setShowSaveToast(false), 4000);
+      noticeTimerRef.current = setTimeout(() => setSaveNotice(false), 6000);
     } catch (err) {
       console.error('Failed to save hero media:', err);
       alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [heroMedia]);
 
   // Load IndexedDB media blob URL if isIndexedDB is true
   useEffect(() => {
@@ -112,7 +124,7 @@ export default function Admin() {
   const [currentAdminUser, setCurrentAdminUser] = useState(DEFAULT_ADMIN_USER);
 
   // Fetch real users from Supabase
-  const fetchSupabaseUsers = async () => {
+  const fetchSupabaseUsers = useCallback(async () => {
     setIsSyncing(true);
     try {
       const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers();
@@ -145,7 +157,7 @@ export default function Admin() {
     } finally {
       setIsSyncing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSupabaseUsers();
@@ -161,7 +173,7 @@ export default function Admin() {
         });
       }
     });
-  }, []);
+  }, [fetchSupabaseUsers]);
 
   // Real-time Queue / Walk-in Status
   const realtimeQueue = useMemo(() => [
