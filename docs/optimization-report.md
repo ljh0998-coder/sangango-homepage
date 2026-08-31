@@ -168,13 +168,13 @@
   - [index.css](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/index.css): 모바일 미디어 쿼리에서 `.hero-section-responsive` 높이(520px+ ➡️ 380px)와 패딩을 황금비율로 최적화하고, `.hero-bg-video-responsive`의 초점 위치를 `center 30%`로 지정. 버튼 레이아웃을 `flex-direction: row`로 슬림화.
 - **효과**: 모바일 화면에서 영상의 좌우 노출 영역이 기존 대비 35% 이상 넓어져 화덕 고등어구이의 전체적인 비주얼이 시원하게 표출됨.
 
-### 24) 대문 동영상 85% 경량화(93MB ➔ 13.9MB) 및 0초 즉시 재생 최적화 (`public/hero_video.mp4`, `Home.jsx`, `Admin.jsx`)
+### 24) 대문 동영상 1080P FHD 고화질 + VBR 6000Kbps 최적화 인코딩 적용 (`public/hero_video.mp4`, `Home.jsx`, `Admin.jsx`)
 - **기능 요구사항**:
-  - 기존 93MB 고용량 및 4.5초 탐색 딜레이로 인해 모바일에서 발생하던 초기 로딩 지연을 원천 해결하기 위해, 비디오 파일 자체를 경량화하고 앞부분을 컷편집(Trim)하여 0초부터 즉시 시작하도록 개선.
+  - 모바일에서의 빠른 재생 속도를 유지하면서도, PC 대형 모니터(1920x1080 FHD)에서 화질 저하 및 뭉개짐 없는 선명한 화덕 조리 비주얼 제공.
 - **구현 방식**:
-  - `public/hero_video.mp4`: 비디오 용량을 93MB에서 13.9MB로 85% 이상 대폭 감량하고, 화덕 조리 하이라이트 앞부분을 사전 컷편집한 영상으로 교체.
-  - [Home.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Home.jsx) 및 [Admin.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Admin.jsx): `startTime: 0` 기본값으로 갱신하고 불필요한 시킹(Seek Range Request) 오버헤드를 제거하여, 첫 바이트 수신 즉시 0초부터 무지연 재생.
-- **효과**: 모바일(LTE/5G) 및 저속 네트워크 환경에서도 버퍼링 없이 즉각적이고 매끄러운 화덕 영상 재생 달성.
+  - `public/hero_video.mp4`: CapCut 1080P 해상도, VBR 6000Kbps(가변 비트레이트), H.264, 30fps 포맷으로 최적화 인코딩(20.1MB) 및 사전 컷편집 적용.
+  - [Home.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Home.jsx) & [Admin.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Admin.jsx): `startTime: 0` 설정으로 브라우저 시킹 지연 없이 첫 프레임부터 0초 즉시 재생.
+- **효과**: PC 와이드 화면에서 선명한 1080P 고화질을 완벽 보장하고, 모바일에서도 20MB대의 가벼운 용량으로 버퍼링 없는 즉각적인 재생 구현.
 
 ---
 
@@ -185,7 +185,7 @@
 3. **크로스 브라우저 호환성**: 모바일(iOS Safari, Android Chrome), 데스크톱(Chrome, Edge, Whale) 완벽 지원
 4. **검색엔진 SEO 제어**: 검색엔진 소유확인 완료 및 개발 중 노출 차단(`noindex`, `Disallow: /`) 적용
 5. **성능 & 메모리 최적화**: `React.memo`, `useCallback`, IndexedDB Blob 메모리 자동 해제 적용
-6. **대문 미디어 모바일 최적화**: 85% 경량화 비디오 교체, 0초 즉시 재생, 화각 35%+ 확장 적용
+6. **대문 미디어 모바일 최적화**: 1080P FHD VBR 고화질 영상 교체, 0초 즉시 재생, 화각 35%+ 확장 적용
 7. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
 
 
