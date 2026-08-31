@@ -197,7 +197,7 @@ const DEFAULT_HERO_MEDIA = {
   autoPlay: true,
   loop: true,
   muted: true,
-  startTime: 4.5
+  startTime: 0
 };
 
 export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout }) {
@@ -362,26 +362,27 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
         {heroMedia.type === 'video' ? (
           <video
             key={activeMediaUrl}
-            src={`${activeMediaUrl}#t=${heroMedia.startTime ?? 4.5}`}
+            src={heroMedia.startTime > 0 ? `${activeMediaUrl}#t=${heroMedia.startTime}` : activeMediaUrl}
             autoPlay={heroMedia.autoPlay ?? true}
             loop={heroMedia.loop ?? true}
             muted={heroMedia.muted ?? true}
             playsInline
+            preload="auto"
             onLoadedMetadata={(e) => {
-              const start = Number(heroMedia.startTime ?? 4.5);
+              const start = Number(heroMedia.startTime || 0);
               if (start > 0) {
                 e.target.currentTime = start;
               }
             }}
             onTimeUpdate={(e) => {
               const v = e.target;
-              const start = Number(heroMedia.startTime ?? 4.5);
+              const start = Number(heroMedia.startTime || 0);
               if (start > 0 && v.currentTime < start - 0.2) {
                 v.currentTime = start;
               }
             }}
             onEnded={(e) => {
-              const start = Number(heroMedia.startTime ?? 4.5);
+              const start = Number(heroMedia.startTime || 0);
               e.target.currentTime = start;
               e.target.play().catch(() => {});
             }}
