@@ -161,6 +161,13 @@
   - [Admin.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Admin.jsx): `startTime: 4.5` 기본값 반영 및 빠른 선택 버튼에 `+4.5초` 옵션 추가.
 - **효과**: 사이트 접속 시 앞부분 대기 없이 4.5초 화덕 조리 하이라이트 구간부터 즉시 노출.
 
+### 23) 모바일 화면 대문 동영상 화각 확장(+35% 와이드 프레이밍) 최적화 (`index.css`, `Home.jsx`)
+- **기능 요구사항**:
+  - 모바일 세로 화면에서 16:9 랜드스케이프 영상 좌우 양옆이 과도하게 잘리는 현상을 해결하고, 좌우 시야각을 30% 이상 더 넓게 확보.
+- **구현 방식**:
+  - [index.css](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/index.css): 모바일 미디어 쿼리에서 `.hero-section-responsive` 높이(520px+ ➡️ 380px)와 패딩을 황금비율로 최적화하고, `.hero-bg-video-responsive`의 초점 위치를 `center 30%`로 지정. 버튼 레이아웃을 `flex-direction: row`로 슬림화.
+- **효과**: 모바일 화면에서 영상의 좌우 노출 영역이 기존 대비 35% 이상 넓어져 화덕 고등어구이의 전체적인 비주얼이 시원하게 표출됨.
+
 ---
 
 ## 2. 종합 검증 결과
@@ -170,8 +177,9 @@
 3. **크로스 브라우저 호환성**: 모바일(iOS Safari, Android Chrome), 데스크톱(Chrome, Edge, Whale) 완벽 지원
 4. **검색엔진 SEO 제어**: 검색엔진 소유확인 완료 및 개발 중 노출 차단(`noindex`, `Disallow: /`) 적용
 5. **성능 & 메모리 최적화**: `React.memo`, `useCallback`, IndexedDB Blob 메모리 자동 해제 적용
-6. **대문 미디어 영구성 & 정밀 재생**: `hero_video.mp4` 4.5초 시작 오프셋 자동 재생 지원
+6. **대문 미디어 모바일 최적화**: 4.5초 시작 오프셋 및 모바일 화각 35%+ 확장 적용
 7. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
+
 
 
 
