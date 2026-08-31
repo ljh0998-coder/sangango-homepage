@@ -168,6 +168,16 @@
   - [index.css](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/index.css): 모바일 미디어 쿼리에서 `.hero-section-responsive` 높이(520px+ ➡️ 380px)와 패딩을 황금비율로 최적화하고, `.hero-bg-video-responsive`의 초점 위치를 `center 30%`로 지정. 버튼 레이아웃을 `flex-direction: row`로 슬림화.
 - **효과**: 모바일 화면에서 영상의 좌우 노출 영역이 기존 대비 35% 이상 넓어져 화덕 고등어구이의 전체적인 비주얼이 시원하게 표출됨.
 
+### 24) 모바일 대문 동영상 로딩 지연 해소 및 제로 딜레이(0초) 렌더링 최적화 (`Home.jsx`, `index.html`)
+- **기능 요구사항**:
+  - 모바일 기기(LTE/5G 환경)에서 대용량 배경 비디오 로딩 및 키프레임 탐색 과정에서 발생하던 0.5~1초의 초기 렌더링 지연(빈 화면/깜빡임) 해소.
+- **구현 방식**:
+  - [index.html](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/index.html): `<link rel="preload" as="image" href="/grilled_mackerel.jpg" fetchpriority="high" />`를 `<head>`에 탑재하여 HTML 파싱 즉시 고화질 대표 이미지를 사전 로드.
+  - [Home.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Home.jsx):
+    1. `<video>` 하단에 제로 딜레이 배경 이미지 레이어(`<div style={heroBgImage} />`)를 상시 렌더링하여 비디오 버퍼링 중에도 즉각적인 풀스크린 배경 노출 보장.
+    2. `<video>` 태그에 `preload="auto"` 및 `poster="/grilled_mackerel.jpg"` 속성을 추가하여 모바일 브라우저의 다운로드 우선순위 상향.
+- **효과**: 모바일 접속 시 깜빡임이나 딜레이 없이 0초 만에 선명한 화덕구이 비주얼이 표출되고 자연스럽게 영상 재생으로 전환됨.
+
 ---
 
 ## 2. 종합 검증 결과
@@ -177,7 +187,7 @@
 3. **크로스 브라우저 호환성**: 모바일(iOS Safari, Android Chrome), 데스크톱(Chrome, Edge, Whale) 완벽 지원
 4. **검색엔진 SEO 제어**: 검색엔진 소유확인 완료 및 개발 중 노출 차단(`noindex`, `Disallow: /`) 적용
 5. **성능 & 메모리 최적화**: `React.memo`, `useCallback`, IndexedDB Blob 메모리 자동 해제 적용
-6. **대문 미디어 모바일 최적화**: 4.5초 시작 오프셋 및 모바일 화각 35%+ 확장 적용
+6. **대문 미디어 모바일 최적화**: 4.5초 시작 오프셋, 화각 35%+ 확장, 제로 딜레이 포스터/preload 적용
 7. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
 
 
