@@ -188,26 +188,31 @@ const banchanItems = [
   }
 ];
 
+const DEFAULT_HERO_MEDIA = {
+  type: 'video',
+  url: '/hero_video.mp4',
+  tagline: '화덕 생선구이의 대명사',
+  title: '400도 특수 화덕에서\n피어나는 자연의 맛',
+  subtitle: '노르웨이 청정 해역의 프리미엄 고등어와 엄선된 한식을\n가장 완벽한 온도에서 즐겨보세요.',
+  autoPlay: true,
+  loop: true,
+  muted: true
+};
+
 export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [heroMedia, setHeroMedia] = useState(() => {
     const saved = localStorage.getItem('sangango_hero_media');
     if (saved) {
-      try { return JSON.parse(saved); } catch {}
+      try { 
+        const parsed = JSON.parse(saved);
+        if (parsed) return parsed;
+      } catch {}
     }
-    return {
-      type: 'image',
-      url: '/grilled_mackerel.jpg',
-      tagline: '화덕 생선구이의 대명사',
-      title: '400도 특수 화덕에서\n피어나는 자연의 맛',
-      subtitle: '노르웨이 청정 해역의 프리미엄 고등어와 엄선된 한식을\n가장 완벽한 온도에서 즐겨보세요.',
-      autoPlay: true,
-      loop: true,
-      muted: true
-    };
+    return DEFAULT_HERO_MEDIA;
   });
 
-  const [activeMediaUrl, setActiveMediaUrl] = useState(heroMedia.url || '/grilled_mackerel.jpg');
+  const [activeMediaUrl, setActiveMediaUrl] = useState(heroMedia.url || '/hero_video.mp4');
 
   useEffect(() => {
     let activeBlobUrl = null;
