@@ -1,26 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Home from './components/Home';
-import Admin from './components/Admin';
-import LoginModal from './components/LoginModal';
+import { supabase } from './lib/supabase';
 import './App.css';
 
+// Lazy-loaded components for optimal bundle splitting
+const Admin = lazy(() => import('./components/Admin'));
+const Signup = lazy(() => import('./components/Signup'));
+const LoginModal = lazy(() => import('./components/LoginModal'));
+
+const PageLoader = () => (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '60vh',
+    color: '#D84315',
+    fontSize: '14px',
+    fontWeight: '600',
+    gap: '8px'
+  }}>
+    <span style={{
+      width: '20px',
+      height: '20px',
+      border: '2px solid #D84315',
+      borderTopColor: 'transparent',
+      borderRadius: '50%',
+      display: 'inline-block',
+      animation: 'spin 0.8s linear infinite'
+    }}></span>
+    <span>페이지 불러오는 중...</span>
+  </div>
+);
+
 function App() {
-  const [currentHash, setCurrentHash] = useState(window.location.hash);
+  const [currentRoute, setCurrentRoute] = useState({
+    hash: window.location.hash,
+    pathname: window.location.pathname
+  });
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
 
-  // Synchronize route hash changes
+  // Synchronize route (hash and pathname) changes
   useEffect(() => {
-    const handleHashChange = () => {
-      setCurrentHash(window.location.hash);
-      // Scroll to top on page switches
+    const handleRouteChange = () => {
+      setCurrentRoute({
+        hash: window.location.hash,
+        pathname: window.location.pathname
+      });
       window.scrollTo(0, 0);
     };
 
-    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, []);
+
+  // Helper to extract clean user info from Supabase user session
+  const formatUserObject = (user) => {
+    if (!user) return null;
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.user_metadata?.name || user.email?.split('@')[0],
+      phone: user.user_metadata?.phone || '',
+    };
+  };
+
+  // Supabase Auth state listener
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setLoggedInUser(formatUserObject(session?.user));
+    });
+
+    return () => {
+      subscription.unsubscribe();
     };
   }, []);
 
@@ -30,19 +87,51 @@ function App() {
     setIsSignupOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.error('Logout error:', e);
+    }
     setLoggedInUser(null);
   };
 
-  // Simple Router Switcher
+  // Router Switcher for /admin and /signup (supporting both pathname and hash)
   const renderPage = () => {
-    if (currentHash === '#/admin') {
-      return <Admin />;
+    const isAdmin = currentRoute.hash === '#/admin' || currentRoute.pathname === '/admin' || currentRoute.pathname === '/admin/';
+    const isSignup = currentRoute.hash === '#/signup' || currentRoute.pathname === '/signup' || currentRoute.pathname === '/signup/';
+
+    if (isAdmin) {
+      return (
+        <Suspense fallback={<PageLoader />}>
+          <Admin />
+        </Suspense>
+      );
+    } else if (isSignup) {
+      return (
+        <Suspense fallback={<PageLoader />}>
+          <Signup 
+            onOpenLogin={() => setIsLoginOpen(true)}
+            onSignupSuccess={(user) => {
+              setLoggedInUser(user);
+            }}
+            onNavigateHome={() => {
+              if (window.location.pathname !== '/') {
+                window.location.href = '/';
+              } else {
+                window.location.hash = '#/';
+              }
+            }}
+          />
+        </Suspense>
+      );
     } else {
       return (
         <Home 
           onOpenLogin={() => setIsLoginOpen(true)} 
-          onOpenSignup={() => setIsSignupOpen(true)} 
+          onOpenSignup={() => {
+            window.location.hash = '#/signup';
+          }} 
           loggedInUser={loggedInUser}
           onLogout={handleLogout}
         />
@@ -55,14 +144,18 @@ function App() {
       {renderPage()}
 
       {/* Global Interactive Modals */}
-      <LoginModal 
-        isOpen={isLoginOpen || isSignupOpen} 
-        onClose={() => {
-          setIsLoginOpen(false);
-          setIsSignupOpen(false);
-        }} 
-        onLoginSuccess={handleLoginSuccess}
-      />
+      {(isLoginOpen || isSignupOpen) && (
+        <Suspense fallback={null}>
+          <LoginModal 
+            isOpen={isLoginOpen || isSignupOpen} 
+            onClose={() => {
+              setIsLoginOpen(false);
+              setIsSignupOpen(false);
+            }} 
+            onLoginSuccess={handleLoginSuccess}
+          />
+        </Suspense>
+      )}
     </>
   );
 }
