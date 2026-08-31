@@ -120,6 +120,13 @@
   - [index.html](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/index.html) meta description을 64자(`수지 동천동 화덕 생선구이 전문점 산으로간고등어 공식 홈페이지. 400도 특수 화덕구이와 프리미엄 반찬 무한 셀프바.`)로 정제.
 - **효과**: 네이버 서치어드바이저 간단체크 '사이트 설명' 항목 녹색 정상 체크(All Green) 달성.
 
+### 18) 구글 서치 콘솔(Google Search Console) 사이트 소유확인 메타태그 적용 (`index.html`)
+- **기능 요구사항**:
+  - 구글 검색엔진 등록 및 서치 콘솔 소유확인을 위한 고유 인증 메타태그 삽입.
+- **구현 방식**:
+  - [index.html](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/index.html) `<head>` 내부에 `<meta name="google-site-verification" content="o3rvqqJpRRcQRXH5vVF4sTkDjLfQ1u6XXImLouoBDR4" />` 추가.
+- **효과**: 구글 서치 콘솔 사이트 소유권 인증 통과 및 구글 검색엔진 크롤링/인덱싱 지원.
+
 ---
 
 ## 2. 종합 검증 결과
@@ -127,8 +134,9 @@
 1. **정적 분석 (`npm run lint`)**: 0 errors, 0 warnings 통과 (클린 코드 유지)
 2. **프로덕션 빌드 (`npm run build`)**: 285ms에 빌드 성공 완료
 3. **크로스 브라우저 호환성**: 모바일(iOS Safari, Android Chrome), 데스크톱(Chrome, Edge, Whale) 완벽 지원
-4. **검색엔진 SEO**: 네이버 서치어드바이저 전 항목 녹색 정상 판정 (All Green SEO)
+4. **검색엔진 SEO**: 네이버(서치어드바이저 All Green) 및 구글(서치콘솔 소유확인) 연동 완료
 5. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
+
 
 
 
