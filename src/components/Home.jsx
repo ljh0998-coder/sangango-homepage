@@ -440,6 +440,8 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
                   alt="산으로간고등어 밥상 이야기" 
                   style={styles.storyImage} 
                   className="animate-scale"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div style={styles.storyBadge} className="story-badge-responsive">
                   <span style={styles.badgeNumber}>30년</span>
@@ -472,7 +474,14 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
             {menuItems.map((item) => (
               <div key={item.id} style={styles.menuCard} className="animate-fade menu-card-hover">
                 <div style={styles.menuImageContainer}>
-                  <img src={item.image} alt={item.name} style={styles.menuImage} className="menu-img-zoom" />
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    style={styles.menuImage} 
+                    className="menu-img-zoom" 
+                    loading="lazy"
+                    decoding="async"
+                  />
                   {item.isPopular && <span style={styles.popularBadge}>인기 대표</span>}
                 </div>
                 <div style={styles.menuCardContent}>
@@ -501,6 +510,8 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
                 src="/korean_self_bar_horizontal.png?v=3" 
                 alt="산으로간고등어 프리미엄 무한 셀프바" 
                 style={styles.selfBarImage}
+                loading="lazy"
+                decoding="async"
               />
               <div style={styles.selfBarBadge} className="selfbar-badge-responsive">
                 <span style={styles.selfBarBadgeText}>DIRECTLY MADE</span>
@@ -554,7 +565,14 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
             {banchanItems.map((item) => (
               <div key={item.id} style={styles.banchanCard} className="animate-fade banchan-card-hover">
                 <div style={styles.banchanImageWrapper}>
-                  <img src={item.image} alt={item.name} style={styles.banchanImage} className="menu-img-zoom" />
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    style={styles.banchanImage} 
+                    className="menu-img-zoom" 
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span style={styles.banchanTag}>{item.tag}</span>
                 </div>
                 <div style={styles.banchanCardContent}>
