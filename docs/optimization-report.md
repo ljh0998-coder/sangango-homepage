@@ -127,6 +127,14 @@
   - [index.html](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/index.html) `<head>` 내부에 `<meta name="google-site-verification" content="o3rvqqJpRRcQRXH5vVF4sTkDjLfQ1u6XXImLouoBDR4" />` 추가.
 - **효과**: 구글 서치 콘솔 사이트 소유권 인증 통과 및 구글 검색엔진 크롤링/인덱싱 지원.
 
+### 19) 사이트 미완성 기간 검색엔진 노출 일시 차단 (`noindex`, `robots.txt Disallow`) (`index.html`, `public/robots.txt`)
+- **기능 요구사항**:
+  - 사이트 제작 및 콘텐츠 완성 전까지 네이버/구글 등 모든 검색엔진의 검색 결과 노출을 일시 차단.
+- **구현 방식**:
+  - [index.html](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/index.html) `<meta name="robots" content="noindex, nofollow" />` 적용.
+  - [public/robots.txt](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/public/robots.txt) `Disallow: /` 설정 (전체 검색로봇 접근 차단).
+- **효과**: 미완성 상태의 사이트가 검색 결과에 섣불리 노출되는 것을 100% 방지 (직접 URL 접속 및 개발 테스트는 정상 작동).
+
 ---
 
 ## 2. 종합 검증 결과
@@ -134,8 +142,9 @@
 1. **정적 분석 (`npm run lint`)**: 0 errors, 0 warnings 통과 (클린 코드 유지)
 2. **프로덕션 빌드 (`npm run build`)**: 285ms에 빌드 성공 완료
 3. **크로스 브라우저 호환성**: 모바일(iOS Safari, Android Chrome), 데스크톱(Chrome, Edge, Whale) 완벽 지원
-4. **검색엔진 SEO**: 네이버(서치어드바이저 All Green) 및 구글(서치콘솔 소유확인) 연동 완료
+4. **검색엔진 SEO 제어**: 검색엔진 소유확인 완료 및 개발 중 노출 차단(`noindex`, `Disallow: /`) 적용
 5. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
+
 
 
 
