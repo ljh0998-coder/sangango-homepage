@@ -153,6 +153,14 @@
   - [Home.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Home.jsx) 및 [Admin.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Admin.jsx)의 `DEFAULT_HERO_MEDIA`를 `type: 'video'`, `url: '/hero_video.mp4'`로 변경.
 - **효과**: 새로고침, 캐시 삭제, 다른 스마트폰 또는 원격 배포 서버 접속 시에도 100% 대문 동영상 상시 자동 재생 보장.
 
+### 22) 대문 동영상 시작 위치(4.5초 오프셋) 및 무한 반복 재생 최적화 (`Home.jsx`, `Admin.jsx`)
+- **기능 요구사항**:
+  - 영상 인트로 앞부분(0초~4.5초)을 건너뛰고 가장 먹음직스러운 4.5초 지점부터 시작하여 반복 재생.
+- **구현 방식**:
+  - [Home.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Home.jsx): `src="/hero_video.mp4#t=4.5"`, `onLoadedMetadata`, `onTimeUpdate`, `onEnded`를 통해 항상 4.5초 지점에서부터 재생 및 반복되도록 제어.
+  - [Admin.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Admin.jsx): `startTime: 4.5` 기본값 반영 및 빠른 선택 버튼에 `+4.5초` 옵션 추가.
+- **효과**: 사이트 접속 시 앞부분 대기 없이 4.5초 화덕 조리 하이라이트 구간부터 즉시 노출.
+
 ---
 
 ## 2. 종합 검증 결과
@@ -162,8 +170,9 @@
 3. **크로스 브라우저 호환성**: 모바일(iOS Safari, Android Chrome), 데스크톱(Chrome, Edge, Whale) 완벽 지원
 4. **검색엔진 SEO 제어**: 검색엔진 소유확인 완료 및 개발 중 노출 차단(`noindex`, `Disallow: /`) 적용
 5. **성능 & 메모리 최적화**: `React.memo`, `useCallback`, IndexedDB Blob 메모리 자동 해제 적용
-6. **대문 미디어 영구성**: `public/hero_video.mp4` 탑재로 전 기기 상시 동영상 재생 지원
+6. **대문 미디어 영구성 & 정밀 재생**: `hero_video.mp4` 4.5초 시작 오프셋 자동 재생 지원
 7. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
+
 
 
 

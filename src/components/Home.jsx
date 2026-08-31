@@ -196,7 +196,8 @@ const DEFAULT_HERO_MEDIA = {
   subtitle: '노르웨이 청정 해역의 프리미엄 고등어와 엄선된 한식을\n가장 완벽한 온도에서 즐겨보세요.',
   autoPlay: true,
   loop: true,
-  muted: true
+  muted: true,
+  startTime: 4.5
 };
 
 export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout }) {
@@ -361,25 +362,28 @@ export default function Home({ onOpenLogin, onOpenSignup, loggedInUser, onLogout
         {heroMedia.type === 'video' ? (
           <video
             key={activeMediaUrl}
-            src={activeMediaUrl}
+            src={`${activeMediaUrl}#t=${heroMedia.startTime ?? 4.5}`}
             autoPlay={heroMedia.autoPlay ?? true}
             loop={heroMedia.loop ?? true}
             muted={heroMedia.muted ?? true}
             playsInline
             onLoadedMetadata={(e) => {
-              if (heroMedia.startTime) {
-                e.target.currentTime = heroMedia.startTime;
+              const start = Number(heroMedia.startTime ?? 4.5);
+              if (start > 0) {
+                e.target.currentTime = start;
               }
             }}
             onTimeUpdate={(e) => {
               const v = e.target;
-              if (heroMedia.startTime && v.currentTime < heroMedia.startTime) {
-                v.currentTime = heroMedia.startTime;
+              const start = Number(heroMedia.startTime ?? 4.5);
+              if (start > 0 && v.currentTime < start - 0.2) {
+                v.currentTime = start;
               }
             }}
             onEnded={(e) => {
-              e.target.currentTime = heroMedia.startTime || 0;
-              e.target.play();
+              const start = Number(heroMedia.startTime ?? 4.5);
+              e.target.currentTime = start;
+              e.target.play().catch(() => {});
             }}
             style={styles.heroBgVideo}
           />
