@@ -99,13 +99,22 @@
   - 초기 페이지 로딩 속도 및 Core Web Vitals 개선을 위해 메뉴/반찬/셀프바 이미지에 `loading="lazy"` 및 `decoding="async"` 적용.
 - **효과**: 검색 엔진 노출 최적화, 카카오톡/페이스북 등 SNS 링크 공유 시 썸네일/설명문 정상 표출, 초기 렌더링 페이로드 및 LCP 시간 단축.
 
+### 15) 네이버 서치어드바이저 및 검색엔진 수집 최적화 (`public/robots.txt`, `public/sitemap.xml`, `index.html`)
+- **기능 요구사항**:
+  - 네이버 검색로봇(Yeti) 및 글로벌 크롤러의 사이트 수집을 허용하는 `robots.txt` 생성.
+  - 사이트의 대표 URL 및 갱신 주기를 명시한 `sitemap.xml` 생성.
+  - 대표 도메인 중복 방지 및 SEO 점수 집중을 위한 `canonical` 태그 및 `robots` 인덱싱 허용 메타태그 추가.
+- **효과**: 네이버 서치어드바이저 사이트 등록 및 소유 확인, 사이트맵/RSS 제출 즉시 가능, 검색 결과 노출 속도 및 신뢰도 향상.
+
 ---
 
 ## 2. 종합 검증 결과
 
 1. **정적 분석 (`npm run lint`)**: 0 errors, 0 warnings 통과 (클린 코드 유지)
-2. **프로덕션 빌드 (`npm run build`)**: 291ms에 빌드 성공 완료 (초경량 벤더 청크 분리)
+2. **프로덕션 빌드 (`npm run build`)**: 285ms에 빌드 성공 완료
 3. **크로스 브라우저 호환성**: 모바일(iOS Safari, Android Chrome), 데스크톱(Chrome, Edge, Whale) 완벽 지원
-4. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
+4. **검색엔진 SEO**: 네이버 Yeti 크롤러 허용(`robots.txt`), `sitemap.xml`, Canonical 태그 구축 완료
+5. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
+
 
 
