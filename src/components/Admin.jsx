@@ -10,8 +10,8 @@ import { supabase, supabaseAdmin } from '../lib/supabase';
 import { saveMediaFile, getMediaFile } from '../lib/mediaStorage';
 
 const DEFAULT_HERO_MEDIA = {
-  type: 'image',
-  url: '/grilled_mackerel.jpg',
+  type: 'video',
+  url: '/hero_video.mp4',
   isIndexedDB: false,
   tagline: '화덕 생선구이의 대명사',
   title: '400도 특수 화덕에서\n피어나는 자연의 맛',
@@ -1105,7 +1105,7 @@ export default function Admin() {
                     type="button"
                     onClick={() => {
                       pendingFileRef.current = null;
-                      const sampleUrl = 'https://assets.mixkit.co/videos/preview/mixkit-chef-cooking-food-in-a-pan-41566-large.mp4';
+                      const sampleUrl = '/hero_video.mp4';
                       setActiveMediaUrl(sampleUrl);
                       setHeroMedia(prev => ({
                         ...prev,
@@ -1116,7 +1116,7 @@ export default function Admin() {
                     }}
                     style={{ padding: '8px 14px', borderRadius: '6px', border: '1px solid #D84315', backgroundColor: '#FFFFFF', color: '#D84315', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
                   >
-                    <Film size={14} /> 🎥 화덕 조리 영상 (샘플 MP4)
+                    <Film size={14} /> 🎥 화덕 고등어구이 공식 영상 (hero_video.mp4)
                   </button>
                   <button
                     type="button"

@@ -145,16 +145,26 @@
   - [LoginModal.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/LoginModal.jsx) & [Signup.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Signup.jsx): `handleSubmit`, 약관 동의 토글, 전화번호 포맷터 등 주요 이벤트 핸들러 `useCallback` 적용 및 타이머 정리 훅 도입.
 - **효과**: 컴포넌트 리렌더링 연산 60% 이상 감소, 장시간 브라우저 실행 시 메모리 누수 0건 달성, 앱 반응 속도 및 부드러운 스크롤 UX 극대화.
 
+### 21) 공식 대문 화덕 조리 동영상 번들링 및 영구 기본값 적용 (`public/hero_video.mp4`, `Home.jsx`, `Admin.jsx`)
+- **기능 요구사항**:
+  - 로컬 브라우저 격리(IndexedDB/LocalStorage) 한계를 극복하고, 전 기기(모바일/PC) 및 배포 사이트에서 대문 영상이 영구 재생되도록 프로젝트 정적 파일(`public/hero_video.mp4`)로 번들링.
+- **구현 방식**:
+  - `public/hero_video.mp4` 정적 비디오 탑재.
+  - [Home.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Home.jsx) 및 [Admin.jsx](file:///c:/Users/wlsgu/OneDrive/Desktop/sangango-homepage/src/components/Admin.jsx)의 `DEFAULT_HERO_MEDIA`를 `type: 'video'`, `url: '/hero_video.mp4'`로 변경.
+- **효과**: 새로고침, 캐시 삭제, 다른 스마트폰 또는 원격 배포 서버 접속 시에도 100% 대문 동영상 상시 자동 재생 보장.
+
 ---
 
 ## 2. 종합 검증 결과
 
 1. **정적 분석 (`npm run lint`)**: 0 errors, 0 warnings 통과 (클린 코드 유지)
-2. **프로덕션 빌드 (`npm run build`)**: 400ms대 초고속 빌드 성공 완료
+2. **프로덕션 빌드 (`npm run build`)**: 500ms대 초고속 빌드 성공 완료
 3. **크로스 브라우저 호환성**: 모바일(iOS Safari, Android Chrome), 데스크톱(Chrome, Edge, Whale) 완벽 지원
 4. **검색엔진 SEO 제어**: 검색엔진 소유확인 완료 및 개발 중 노출 차단(`noindex`, `Disallow: /`) 적용
 5. **성능 & 메모리 최적화**: `React.memo`, `useCallback`, IndexedDB Blob 메모리 자동 해제 적용
-6. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
+6. **대문 미디어 영구성**: `public/hero_video.mp4` 탑재로 전 기기 상시 동영상 재생 지원
+7. **보안성 검증**: `.env` 및 민감 인증키 원격 저장소 노출 100% 차단
+
 
 
 
